@@ -1,0 +1,5 @@
+apiVersion: v2
+name: expense
+description: Expense Project Helm Chart
+type: application
+version: 0.1.0

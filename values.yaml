@@ -1,0 +1,16 @@
+initContainers:
+  enabled: false
+job:
+  enabled: false
+
+replicas: 1
+
+ingress:
+  enabled: false
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80

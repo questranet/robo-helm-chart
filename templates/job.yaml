@@ -1,0 +1,35 @@
+{{- if .Values.job.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Values.appName }}-schema
+  annotations:
+    "helm.sh/hook": pre-install
+spec:
+  template:
+    spec:
+      serviceAccountName: {{ .Values.appName }}
+      restartPolicy: Never
+      initContainers:
+        - name: awsparam
+          image: 008089408493.dkr.ecr.us-east-1.amazonaws.com/expense-parameter-init-container:{{ .Values.initContainers.imageVersion }}
+          env:
+            - name: INPUT
+              value: "{{ .Values.job.INPUT }}"
+          volumeMounts:
+            - mountPath: /config
+              name: config
+      containers:
+        - name: schema
+          image: 008089408493.dkr.ecr.us-east-1.amazonaws.com/expense-schema-load:{{ .Values.job.imageVersion }}
+          env:
+            - name: COMPONENT
+              value: {{ .Values.appName }}
+          volumeMounts:
+            - mountPath: /config
+              name: config
+      volumes:
+        - name: config
+          emptyDir:
+            sizeLimit: 5Mi
+  {{- end }}
