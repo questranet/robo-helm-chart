@@ -21,7 +21,7 @@ spec:
               name: config
       containers:
         - name: schema
-          image: 008089408493.dkr.ecr.us-east-1.amazonaws.com/expense-schema-load:{{ .Values.job.imageVersion }}
+          image: 008089408493.dkr.ecr.us-east-1.amazonaws.com/exp-schema-load:{{ .Values.job.imageVersion }}
           env:
             - name: COMPONENT
               value: {{ .Values.appName }}
