@@ -16,11 +16,11 @@ spec:
     spec:
       serviceAccountName: {{ .Values.appName }}
     {{- if .Values.initContainers.enabled }}
-    volumes:
-      - name: config
-        emptyDir:
-          sizeLimit: 5Mi
-    initContainers:
+      volumes:
+        - name: config
+          emptyDir:
+            sizeLimit: 5Mi
+      initContainers:
       - name: aws-param
         image: 008089408493.dkr.ecr.us-east-1.amazonaws.com/expense-parameter-init-container:{{ .Values.initContainers.imageVersion }}
         env:
@@ -29,26 +29,27 @@ spec:
         volumeMounts:
           - mountPath: /config
             name: config
-    containers:
-      - name: {{ .Values.appName }}
-        image: 008089408493.dkr.ecr.us-east-1.amazonaws.com/{{ .Values.appName }}:{{ .Values.appVersion }}
-        volumeMounts:
-          - mountPath: /config
-            name: config
+      containers:
+        - name: {{ .Values.appName }}
+          image: 008089408493.dkr.ecr.us-east-1.amazonaws.com/{{ .Values.appName}}:{{ .Values.appVersion }}
+          volumeMounts:
+            - mountPath: /config
+              name: config
     {{- else }}
-    containers:
-      - name: {{ .Values.appName }}
-        image: 008089408493.dkr.ecr.us-east-1.amazonaws.com/{{ .Values.appName }}:{{ .Values.appVersion }}
+      containers:
+        - name: {{ .Values.appName }}
+          image: 008089408493.dkr.ecr.us-east-1.amazonaws.com/{{ .Values.appName }}:{{ .Values.appVersion }}
     {{- end }}
-    readinessProbe:
-      tcpSocket:
-        port: {{ .Values.service.targetPort }}
-      initialDelaySeconds: 10
-      periodSeconds: 5
-    livenessProbe:
-      tcpSocket:
-        port: {{ .Values.service.targetPort }}
-      initialDelaySeconds: 10
-      periodSeconds: 5
-    resources:
-      {{- toYaml .Values.resources | nindent 12 }}
+          readinessProbe:
+            tcpSocket:
+              port: { { .Values.service.targetPort } }
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          livenessProbe:
+            tcpSocket:
+              port: { { .Values.service.targetPort } }
+            initialDelaySeconds: 10
+            periodSeconds: 5
+          resources:
+            { { - toYaml .Values.resources | nindent 12 } }
+
